@@ -11,6 +11,7 @@ const app = exp();
 
 app.use(cors());
 app.use(exp.json());
+app.use(exp.static(__dirname + "/public"));
 app.use(
   exp.urlencoded({
     extended: true,

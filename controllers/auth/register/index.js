@@ -1,5 +1,6 @@
 // Modules
 const bcrypt = require("bcryptjs");
+const { success, error } = require("consola");
 
 // Imports
 const {
@@ -28,17 +29,17 @@ const MSG = {
  * @param {string} role - The role of the user {admin, user, superadmin}.
  * @return {Object} contains 2 attributes {error/success message : string, success : boolean}.
  */
-const register = async (userRequest, role, res) => {
+const register = async (userRequest, role, res, file) => {
   try {
     const signupRequest = await signupSchema.validateAsync(userRequest);
     // Validate the username
-    let usernameNotTaken = await validateUsername(signupRequest.username);
-    if (!usernameNotTaken) {
-      return res.status(400).json({
-        message: MSG.usernameExists,
-        success: false,
-      });
-    }
+    // let usernameNotTaken = await validateUsername(signupRequest.username);
+    // if (!usernameNotTaken) {
+    //   return res.status(400).json({
+    //     message: MSG.usernameExists,
+    //     success: false,
+    //   });
+    // }
 
     // validate the email
     let emailNotRegistered = await validateEmail(signupRequest.email);
@@ -59,6 +60,12 @@ const register = async (userRequest, role, res) => {
     });
 
     await newUser.save();
+    if (file) {
+      const profileImagePath = `/public/uploads/users/images/${newUser._id}/${file.filename}`;
+      await User.findByIdAndUpdate(newUser._id, {
+        profile_pic: profileImagePath,
+      });
+    }
     return res.status(201).json({
       message: MSG.signupSuccess,
       success: true,

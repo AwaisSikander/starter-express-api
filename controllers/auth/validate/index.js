@@ -30,7 +30,10 @@ const validateEmail = async (email) => {
  * @const signupSchema
  */
 const signupSchema = Joi.object({
-  name: Joi.string().min(2).required(),
+  first_name: Joi.string().min(2).required(),
+  last_name: Joi.string().min(2).required(),
+  phone_number: Joi.string().min(10).required(),
+  country: Joi.string().min(3).required(),
   // username: Joi.string().min(4).required(),
   email: Joi.string().email().required(),
   password: Joi.string()

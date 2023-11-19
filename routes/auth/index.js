@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const Upload = require("../../utils/Upload");
 const { ROLE } = require("../../config/roles");
 // Bring in the User Registration function
 const {
@@ -7,19 +8,19 @@ const {
   checkRole,
   userRegister,
   serializeUser,
-} = require("../../Controllers/auth");
+} = require("../../controllers/auth");
 
 router.get("/", async (req, res) => {
   return res.send("Auth service running...");
 });
 
 // Users Registeration Route
-router.post("/signup", async (req, res) => {
-  await userRegister(req.body, ROLE.user, res);
+router.post("/signup", Upload, async (req, res) => {
+  await userRegister(req.body, ROLE.user, res, req.file);
 });
 
 // Admin Registration Route
-router.post("/signup-admin", async (req, res) => {
+router.post("/signup-admin", Upload, async (req, res) => {
   await userRegister(req.body, ROLE.admin, res);
 });
 

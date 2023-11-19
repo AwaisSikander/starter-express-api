@@ -3,13 +3,33 @@ const { ROLE } = require("../config/roles");
 
 const UserSchema = new Schema(
   {
-    name: {
+    first_name: {
+      type: String,
+      required: true,
+    },
+    last_name: {
       type: String,
       required: true,
     },
     email: {
       type: String,
       required: true,
+    },
+    phone_number: {
+      type: String,
+      required: true,
+    },
+    profile_pic: {
+      type: String,
+      required: false,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    group_ref_id: {
+      type: String,
+      required: false,
     },
     role: {
       type: String,

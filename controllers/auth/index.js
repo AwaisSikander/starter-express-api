@@ -2,8 +2,8 @@ const passport = require("passport");
 const register = require("./register");
 const login = require("./login");
 
-const userRegister = (userRequest, role, res) =>
-  register(userRequest, role, res);
+const userRegister = (userRequest, role, res, file) =>
+  register(userRequest, role, res, file);
 
 const userLogin = (userRequest, role, res) => login(userRequest, role, res);
 
