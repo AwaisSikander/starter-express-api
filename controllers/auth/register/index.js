@@ -9,6 +9,8 @@ const {
   signupSchema,
 } = require("../validate");
 const User = require("../../../models/User");
+const { USER_PROFILE_IMAGE_PREFIX } = require("../../../config/index");
+const { ROLE } = require("../../../config/roles");
 
 /**
  * Contains messages returned by the server when exceptions are catched.
@@ -31,6 +33,7 @@ const MSG = {
  */
 const register = async (userRequest, role, res, file) => {
   try {
+    userRequest.role = role;
     const signupRequest = await signupSchema.validateAsync(userRequest);
     // Validate the username
     // let usernameNotTaken = await validateUsername(signupRequest.username);
@@ -58,10 +61,13 @@ const register = async (userRequest, role, res, file) => {
       password,
       role,
     });
-
+    /* CREATE GROUP FOR BOTH PROMOTER & ADMIN */
+    if ([ROLE.admin, ROLE.promoter].includes(role)) {
+      //
+    }
     await newUser.save();
     if (file) {
-      const profileImagePath = `/public/uploads/users/images/${newUser._id}/${file.filename}`;
+      const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}${newUser._id}/${file.filename}`;
       await User.findByIdAndUpdate(newUser._id, {
         profile_pic: profileImagePath,
       });

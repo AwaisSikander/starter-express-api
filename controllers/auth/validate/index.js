@@ -34,7 +34,12 @@ const signupSchema = Joi.object({
   last_name: Joi.string().min(2).required(),
   phone_number: Joi.string().min(10).required(),
   country: Joi.string().min(3).required(),
-  // username: Joi.string().min(4).required(),
+  role: Joi.string().min(3).optional(),
+  group_ref_id: Joi.when("role", {
+    is: Joi.string().valid("admin", "promoter"),
+    then: Joi.string().min(3).optional(),
+    otherwise: Joi.string().min(3).required(),
+  }),
   email: Joi.string().email().required(),
   password: Joi.string()
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 const { ROLE } = require("../config/roles");
 
 const UserSchema = new Schema(
@@ -8,6 +8,10 @@ const UserSchema = new Schema(
       required: true,
     },
     last_name: {
+      type: String,
+      required: true,
+    },
+    password: {
       type: String,
       required: true,
     },
@@ -35,10 +39,6 @@ const UserSchema = new Schema(
       type: String,
       default: "user",
       enum: [ROLE.user, ROLE.admin, ROLE.superadmin],
-    },
-    password: {
-      type: String,
-      required: true,
     },
   },
   { timestamps: true }

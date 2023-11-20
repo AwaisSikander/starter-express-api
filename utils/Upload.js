@@ -1,9 +1,10 @@
 const multer = require("multer");
 const path = require("path");
+const { USER_PROFILE_IMAGE_DESTINATION } = require("../config/index");
 
 /** Storage Engine */
 const storageEngine = multer.diskStorage({
-  destination: "./public/uploads/users/images",
+  destination: USER_PROFILE_IMAGE_DESTINATION,
   filename: function (req, file, fn) {
     fn(
       null,
