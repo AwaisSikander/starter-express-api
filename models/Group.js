@@ -9,7 +9,7 @@ const GroupSchema = new Schema(
     },
     title: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       lowercase: true,
     },
@@ -20,7 +20,7 @@ const GroupSchema = new Schema(
     },
     url_slug: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       lowercase: true,
     },
@@ -36,13 +36,14 @@ const GroupSchema = new Schema(
     },
     about: {
       type: String,
-      required: true,
+      required: false,
     },
     payment_status: {
       type: String,
       required: false,
       trim: true,
       lowercase: true,
+      default: "trial",
     },
   },
   { timestamps: true }

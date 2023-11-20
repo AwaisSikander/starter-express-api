@@ -1,4 +1,5 @@
 const User = require("../../../models/User");
+const Group = require("../../../models/Group");
 const Joi = require("joi");
 
 /**
@@ -26,6 +27,24 @@ const validateEmail = async (email) => {
 };
 
 /**
+ * Check if user account exist by email.
+ * @async
+ * @function validateEmail
+ * @param {string} email - The email of the user.
+ * @return {boolean} If the user has an account.
+ */
+const validateGroupRefIdAndUrlSlug = async (ref_id, url_slug) => {
+  let query = {
+    $or: [{ ref_id }, { url_slug }],
+  };
+  if (!url_slug) {
+    query = { url_slug };
+  }
+  let group = await Group.findOne(query);
+  return group ? false : true;
+};
+
+/**
  * Sets a validation schema for signup request body.
  * @const signupSchema
  */
@@ -35,16 +54,29 @@ const signupSchema = Joi.object({
   phone_number: Joi.string().min(10).required(),
   country: Joi.string().min(3).required(),
   role: Joi.string().min(3).optional(),
-  group_ref_id: Joi.when("role", {
-    is: Joi.string().valid("admin", "promoter"),
-    then: Joi.string().min(3).optional(),
-    otherwise: Joi.string().min(3).required(),
-  }),
   email: Joi.string().email().required(),
   password: Joi.string()
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     .min(8)
     .required(),
+
+  ref_id: Joi.string()
+    .length(10)
+    .pattern(/^\d+$/)
+    .messages({
+      "string.pattern.base": `ref_id must be integer and have 10 digits.`,
+    })
+    .required(),
+  title: Joi.when("role", {
+    is: Joi.string().valid("admin"),
+    then: Joi.string().min(3).required(),
+    otherwise: Joi.string().min(3).optional(),
+  }),
+  url_slug: Joi.when("role", {
+    is: Joi.string().valid("admin"),
+    then: Joi.string().min(3).required(),
+    otherwise: Joi.string().optional(),
+  }),
 });
 
 /**
@@ -62,6 +94,7 @@ const loginSchema = Joi.object({
 module.exports = {
   validateEmail,
   validateUsername,
+  validateGroupRefIdAndUrlSlug,
   signupSchema,
   loginSchema,
 };

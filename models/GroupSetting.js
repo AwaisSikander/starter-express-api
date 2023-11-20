@@ -16,7 +16,7 @@ const GroupSettingsSchema = new Schema(
       default: "all_time",
     },
     min_user_for_rating: {
-      type: Int8Array,
+      type: Number,
       required: true,
       default: 3,
     },
@@ -25,11 +25,11 @@ const GroupSettingsSchema = new Schema(
       default: true,
     },
     min_users: {
-      type: Int8Array,
+      type: Number,
       default: 3,
     },
     max_users: {
-      type: Int8Array,
+      type: Number,
       default: 15,
     },
     winner_1_image: {

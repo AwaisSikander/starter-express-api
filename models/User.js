@@ -40,10 +40,18 @@ const UserSchema = new Schema(
       trim: true,
       lowercase: true,
     },
-    group_ref_id: {
-      type: String,
+    group_ref_ids: [
+      {
+        type: String,
+        required: false,
+      },
+    ],
+    group_id: {
+      type: Types.ObjectId,
+      ref: "groups",
       required: false,
     },
+
     role: {
       type: String,
       default: "user",

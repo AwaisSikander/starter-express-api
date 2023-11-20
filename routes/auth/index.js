@@ -24,6 +24,11 @@ router.post("/signup-admin", Upload, async (req, res) => {
   await userRegister(req.body, ROLE.admin, res);
 });
 
+// Promoter Registeration
+router.post("/signup-promoter", Upload, async (req, res) => {
+  await userRegister(req.body, ROLE.promoter, res);
+});
+
 // Super Admin Registration Route
 router.post("/signup-superadmin", async (req, res) => {
   await userRegister(req.body, ROLE.superadmin, res);
