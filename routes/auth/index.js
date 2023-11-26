@@ -30,9 +30,9 @@ router.post("/signup-promoter", Upload, async (req, res) => {
 });
 
 // Super Admin Registration Route
-router.post("/signup-superadmin", async (req, res) => {
-  await userRegister(req.body, ROLE.superadmin, res);
-});
+// router.post("/signup-superadmin", async (req, res) => {
+//   await userRegister(req.body, ROLE.superadmin, res);
+// });
 
 // Users Login Route
 router.post("/login", async (req, res) => {
@@ -44,10 +44,14 @@ router.post("/login-admin", async (req, res) => {
   await userLogin(req.body, ROLE.admin, res);
 });
 
-// Super Admin Login Route
-router.post("/login-superadmin", async (req, res) => {
-  await userLogin(req.body, ROLE.superadmin, res);
+router.post("/login-promoter", async (req, res) => {
+  await userLogin(req.body, ROLE.promoter, res);
 });
+
+// Super Admin Login Route
+// router.post("/login-superadmin", async (req, res) => {
+//   await userLogin(req.body, ROLE.superadmin, res);
+// });
 
 // Super Admin Protected Route
 router.get(

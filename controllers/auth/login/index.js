@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 // Imports
 const { SECRET, TOKEN_EXPIRATION } = require("../../../config");
 const User = require("../../../models/User");
+const UserGroup = require("../../../models/UserGroup");
 const { loginSchema } = require("../validate");
 
 /**
@@ -13,7 +14,7 @@ const { loginSchema } = require("../validate");
  * @const MSG
  */
 const MSG = {
-  usernameNotExist: "Username is not found. Invalid login credentials.",
+  usernameNotExist: "Email is not found. Invalid login credentials.",
   wrongRole: "Please make sure this is your identity.",
   loginSuccess: "You are successfully logged in.",
   wrongPassword: "Incorrect password.",
@@ -31,20 +32,15 @@ const MSG = {
 const login = async (userRequest, role, res) => {
   try {
     const loginRequest = await loginSchema.validateAsync(userRequest);
-    let { username, password } = userRequest;
+    let { email, password } = loginRequest;
     // First Check if the username or email is in the database
 
     let user;
-    if (isEmail(username)) {
-      const email = username;
-      user = await User.findOne({ email });
-    } else {
-      user = await User.findOne({ username });
-    }
+    user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
-        reason: "username",
+        reason: "email",
         message: MSG.usernameNotExist,
         success: false,
       });
@@ -63,21 +59,61 @@ const login = async (userRequest, role, res) => {
     let isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       // Sign in the token and issue it to the user
+
       let token = jwt.sign(
         {
           user_id: user._id,
           role: user.role,
-          username: user.username,
           email: user.email,
+          group_ref_ids: user.group_ref_ids,
+          group_id: user.group_id,
         },
         SECRET,
         { expiresIn: "7 days" }
       );
-
+      const userGroups = await UserGroup.aggregate([
+        {
+          $match: {
+            user_id: user._id,
+          },
+        },
+        {
+          $lookup: {
+            from: "groups",
+            localField: "group_id",
+            foreignField: "_id",
+            as: "group",
+          },
+        },
+        {
+          $unwind: "$group",
+          $unwind: {
+            path: "$group",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            _id: "$group._id",
+            ref_id: "$group.ref_id",
+            title: "$group.title",
+            url_slug: "$group.url_slug",
+            status: "$group.status",
+          },
+        },
+      ]);
       let result = {
-        username: user.username,
+        user_id: user._id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone_number,
+        country: user.country,
+        profile_pic: user.profile_pic,
         role: user.role,
         email: user.email,
+        group_ref_ids: user.group_ref_ids,
+        group_id: user.group_id,
+        user_groups: userGroups,
         token: `Bearer ${token}`,
         expiresIn: TOKEN_EXPIRATION,
       };

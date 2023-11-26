@@ -6,6 +6,7 @@ const { success, error } = require("consola");
 const {
   validateEmail,
   validateGroupRefIdAndUrlSlug,
+  getGroupByRefId,
   validateUsername,
   signupSchema,
 } = require("../validate");
@@ -26,6 +27,7 @@ const MSG = {
   signupSuccess: "You are successfully signed up.",
   signupError: "Unable to create your account.",
   refIdOrUrlSlug: "Ref id or url is already taken.",
+  refIdNotFound: "Ref id not found.",
 };
 
 /**
@@ -39,6 +41,7 @@ const MSG = {
 const register = async (userRequest, role, res, file) => {
   try {
     userRequest.role = role;
+    let group;
     const signupRequest = await signupSchema.validateAsync(userRequest);
 
     // validate the email
@@ -61,7 +64,18 @@ const register = async (userRequest, role, res, file) => {
           success: false,
         });
       }
+    } else if (ROLE.user == role) {
+      group = await getGroupByRefId(signupRequest.ref_id);
+      if (!group) {
+        return res.status(400).json({
+          message: MSG.refIdNotFound,
+          success: false,
+        });
+      }
     }
+
+    // console.log(group);
+    // return group;
 
     // Get the hashed password
     const password = await bcrypt.hash(signupRequest.password, 12);
@@ -88,6 +102,15 @@ const register = async (userRequest, role, res, file) => {
       const newUserGroups = new UserGroup({
         user_id: newUser._id,
         group_id: newGroup._id,
+      });
+      newUserGroups.save();
+    } else if (role == ROLE.user) {
+      if (newUser.group_ref_ids)
+        newUser.group_ref_ids.push(signupRequest.ref_id);
+      await newUser.save();
+      const newUserGroups = new UserGroup({
+        user_id: newUser._id,
+        group_id: group._id,
       });
       newUserGroups.save();
     }

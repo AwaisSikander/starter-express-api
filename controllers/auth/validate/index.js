@@ -44,6 +44,12 @@ const validateGroupRefIdAndUrlSlug = async (ref_id, url_slug) => {
   return group ? false : true;
 };
 
+const getGroupByRefId = async (ref_id) => {
+  let query = { ref_id };
+  let group = await Group.findOne(query);
+  return group ? group : null;
+};
+
 /**
  * Sets a validation schema for signup request body.
  * @const signupSchema
@@ -84,7 +90,7 @@ const signupSchema = Joi.object({
  * @const loginSchema
  */
 const loginSchema = Joi.object({
-  username: Joi.string().min(4).required(),
+  email: Joi.string().email().required(),
   password: Joi.string()
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
     .min(8)
@@ -95,6 +101,7 @@ module.exports = {
   validateEmail,
   validateUsername,
   validateGroupRefIdAndUrlSlug,
+  getGroupByRefId,
   signupSchema,
   loginSchema,
 };
