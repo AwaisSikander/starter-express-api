@@ -6,7 +6,7 @@ const passport = require("passport");
 router.get("/", (req, res) => {
   res.send("Api running...");
 });
-// Authentication Router Middleware
+// Authentication Router Middleware..
 router.use("/auth", require("./auth"));
 
 // Admin Protected Route
