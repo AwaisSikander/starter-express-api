@@ -90,7 +90,7 @@ const register = async (userRequest, res, file) => {
     const newUser = new User({
       ...signupRequest,
       password,
-      role: [ROLE.admin, ROLE.user].includes(role) ? "user" : role,
+      role,
     });
     await newUser.save();
 
@@ -109,6 +109,7 @@ const register = async (userRequest, res, file) => {
       const newUserGroups = new UserGroup({
         user_id: newUser._id,
         group_id: newGroup._id,
+        group_ref_id: signupRequest.ref_id,
         role,
       });
       newUserGroups.save();
@@ -119,6 +120,7 @@ const register = async (userRequest, res, file) => {
       const newUserGroups = new UserGroup({
         user_id: newUser._id,
         group_id: group._id,
+        group_ref_id: signupRequest.ref_id,
         role,
       });
       newUserGroups.save();

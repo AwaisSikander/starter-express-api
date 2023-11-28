@@ -71,11 +71,15 @@ const login = async (userRequest, res) => {
         SECRET,
         { expiresIn: "7 days" }
       );
+      const userMatch = {
+        user_id: user._id,
+      };
+      if (user.group_id) {
+        userMatch.group_id = user.group_id;
+      }
       const userGroups = await UserGroup.aggregate([
         {
-          $match: {
-            user_id: user._id,
-          },
+          $match: userMatch,
         },
         {
           $lookup: {
@@ -103,6 +107,7 @@ const login = async (userRequest, res) => {
           },
         },
       ]);
+
       let result = {
         user_id: user._id,
         first_name: user.first_name,
@@ -110,14 +115,14 @@ const login = async (userRequest, res) => {
         phone_number: user.phone_number,
         country: user.country,
         profile_pic: user.profile_pic,
+        role: userGroups[0].role,
         user_role: user.role,
         email: user.email,
         group_ref_ids: user.group_ref_ids,
         group_id: user.group_id,
-        user_groups: userGroups,
+        user_group: userGroups[0],
         token: `Bearer ${token}`,
         expiresIn: TOKEN_EXPIRATION,
-        role: userGroups.role,
       };
 
       return res.status(200).json({
