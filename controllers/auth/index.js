@@ -2,10 +2,10 @@ const passport = require("passport");
 const register = require("./register");
 const login = require("./login");
 
-const userRegister = (userRequest, role, res, file) =>
-  register(userRequest, role, res, file);
+const userRegister = (userRequest, res, file) =>
+  register(userRequest, res, file);
 
-const userLogin = (userRequest, role, res) => login(userRequest, role, res);
+const userLogin = (userRequest, res) => login(userRequest, res);
 
 const userAuth = passport.authenticate("jwt", { session: false });
 

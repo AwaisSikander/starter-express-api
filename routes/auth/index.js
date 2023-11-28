@@ -16,18 +16,18 @@ router.get("/", async (req, res) => {
 
 // Users Registeration Route
 router.post("/signup", Upload, async (req, res) => {
-  await userRegister(req.body, ROLE.user, res, req.file);
+  await userRegister(req.body, res, req.file);
 });
 
-// Admin Registration Route
-router.post("/signup-admin", Upload, async (req, res) => {
-  await userRegister(req.body, ROLE.admin, res);
-});
+// // Admin Registration Route
+// router.post("/signup-admin", Upload, async (req, res) => {
+//   await userRegister(req.body, ROLE.admin, res);
+// });
 
-// Promoter Registeration
-router.post("/signup-promoter", Upload, async (req, res) => {
-  await userRegister(req.body, ROLE.promoter, res);
-});
+// // Promoter Registeration
+// router.post("/signup-promoter", Upload, async (req, res) => {
+//   await userRegister(req.body, ROLE.promoter, res);
+// });
 
 // Super Admin Registration Route
 // router.post("/signup-superadmin", async (req, res) => {
@@ -36,17 +36,17 @@ router.post("/signup-promoter", Upload, async (req, res) => {
 
 // Users Login Route
 router.post("/login", async (req, res) => {
-  await userLogin(req.body, ROLE.user, res);
+  await userLogin(req.body, res);
 });
 
-// Admin Login Route
-router.post("/login-admin", async (req, res) => {
-  await userLogin(req.body, ROLE.admin, res);
-});
+// // Admin Login Route
+// router.post("/login-admin", async (req, res) => {
+//   await userLogin(req.body, ROLE.admin, res);
+// });
 
-router.post("/login-promoter", async (req, res) => {
-  await userLogin(req.body, ROLE.promoter, res);
-});
+// router.post("/login-promoter", async (req, res) => {
+//   await userLogin(req.body, ROLE.promoter, res);
+// });
 
 // Super Admin Login Route
 // router.post("/login-superadmin", async (req, res) => {

@@ -29,7 +29,7 @@ const MSG = {
  * @param {string} role - The role of the user {admin, user, superadmin}.
  * @return {Object} contains 3 attributes {error/success message : string, success : boolean, reason: string}.
  */
-const login = async (userRequest, role, res) => {
+const login = async (userRequest, res) => {
   try {
     const loginRequest = await loginSchema.validateAsync(userRequest);
     let { email, password } = loginRequest;
@@ -46,14 +46,14 @@ const login = async (userRequest, role, res) => {
       });
     }
 
-    // We will check the role
-    if (user.role !== role) {
-      return res.status(403).json({
-        reason: "role",
-        message: MSG.wrongRole,
-        success: false,
-      });
-    }
+    // // We will check the role
+    // if (user.role !== role) {
+    //   return res.status(403).json({
+    //     reason: "role",
+    //     message: MSG.wrongRole,
+    //     success: false,
+    //   });
+    // }
     // That means user is existing and trying to signin from the right portal
     // Now check for the password
     let isMatch = await bcrypt.compare(password, user.password);
@@ -99,6 +99,7 @@ const login = async (userRequest, role, res) => {
             title: "$group.title",
             url_slug: "$group.url_slug",
             status: "$group.status",
+            role: 1,
           },
         },
       ]);
@@ -109,13 +110,14 @@ const login = async (userRequest, role, res) => {
         phone_number: user.phone_number,
         country: user.country,
         profile_pic: user.profile_pic,
-        role: user.role,
+        user_role: user.role,
         email: user.email,
         group_ref_ids: user.group_ref_ids,
         group_id: user.group_id,
         user_groups: userGroups,
         token: `Bearer ${token}`,
         expiresIn: TOKEN_EXPIRATION,
+        role: userGroups.role,
       };
 
       return res.status(200).json({

@@ -1,5 +1,5 @@
 {
-  "name": "role-based-auth",
+  "name": "friends-rating-app",
   "version": "1.0.0",
   "description": "Role based authentication for NodeJS and ExpressJS",
   "main": "index.js",
@@ -19,7 +19,7 @@
     "serve": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "Omar Mokhfi [ob.mokhfi@gmail.com]",
+  "author": "Awais Sikander [sikande007@gmail.com]",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

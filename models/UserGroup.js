@@ -11,6 +11,13 @@ const UserGroupsSchema = new Schema(
       type: Types.ObjectId,
       ref: "users",
     },
+    role: {
+      type: String,
+      default: "user",
+      trim: true,
+      lowercase: true,
+      enum: [ROLE.user, ROLE.promoter, ROLE.admin, ROLE.superadmin],
+    },
   },
   { timestamps: true }
 );

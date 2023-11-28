@@ -28,6 +28,7 @@ const MSG = {
   signupError: "Unable to create your account.",
   refIdOrUrlSlug: "Ref id or url is already taken.",
   refIdNotFound: "Ref id not found.",
+  invalidRole: "Invalid role",
 };
 
 /**
@@ -37,13 +38,19 @@ const MSG = {
  * @param {Object} userRequest - The data of the user ().
  * @param {string} role - The role of the user {admin, user, superadmin}.
  * @return {Object} contains 2 attributes {error/success message : string, success : boolean}.
+ * if admin need url_slug & new ref id  & if user only need ref_id
  */
-const register = async (userRequest, role, res, file) => {
+const register = async (userRequest, res, file) => {
   try {
-    userRequest.role = role;
+    const role = userRequest.role;
     let group;
     const signupRequest = await signupSchema.validateAsync(userRequest);
-
+    if (![ROLE.admin, ROLE.promoter, ROLE.user].includes(role)) {
+      return res.status(400).json({
+        message: MSG.invalidRole,
+        success: false,
+      });
+    }
     // validate the email
     let emailNotRegistered = await validateEmail(signupRequest.email);
     if (!emailNotRegistered) {
@@ -83,7 +90,7 @@ const register = async (userRequest, role, res, file) => {
     const newUser = new User({
       ...signupRequest,
       password,
-      role,
+      role: [ROLE.admin, ROLE.user].includes(role) ? "user" : role,
     });
     await newUser.save();
 
@@ -102,6 +109,7 @@ const register = async (userRequest, role, res, file) => {
       const newUserGroups = new UserGroup({
         user_id: newUser._id,
         group_id: newGroup._id,
+        role,
       });
       newUserGroups.save();
     } else if (role == ROLE.user) {
@@ -111,6 +119,7 @@ const register = async (userRequest, role, res, file) => {
       const newUserGroups = new UserGroup({
         user_id: newUser._id,
         group_id: group._id,
+        role,
       });
       newUserGroups.save();
     }
