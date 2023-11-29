@@ -29,6 +29,9 @@ const UserSchema = new Schema(
     phone_number: {
       type: String,
       required: true,
+      trim: true,
+      lowercase: true,
+      unique: [true, "Phone number already taken"],
     },
     profile_pic: {
       type: String,

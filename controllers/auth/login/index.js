@@ -77,9 +77,16 @@ const login = async (userRequest, res) => {
       if (user.group_id) {
         userMatch.group_id = user.group_id;
       }
-      const userGroups = await UserGroup.aggregate([
+      let userGroups = await UserGroup.aggregate([
         {
-          $match: userMatch,
+          $match: {
+            $and: [
+              {
+                user_id: user._id,
+              },
+              { default_selected: true },
+            ],
+          },
         },
         {
           $lookup: {
@@ -108,6 +115,12 @@ const login = async (userRequest, res) => {
         },
       ]);
 
+      if (userGroups.length) {
+        userGroups = userGroups[0];
+      } else {
+        userGroups = null;
+      }
+
       let result = {
         user_id: user._id,
         first_name: user.first_name,
@@ -115,12 +128,12 @@ const login = async (userRequest, res) => {
         phone_number: user.phone_number,
         country: user.country,
         profile_pic: user.profile_pic,
-        role: userGroups[0].role,
+        role: userGroups ? userGroups.role : undefined,
         user_role: user.role,
         email: user.email,
         group_ref_ids: user.group_ref_ids,
         group_id: user.group_id,
-        user_group: userGroups[0],
+        user_group: userGroups ? userGroups : undefined,
         token: `Bearer ${token}`,
         expiresIn: TOKEN_EXPIRATION,
       };

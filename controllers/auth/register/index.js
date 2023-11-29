@@ -23,7 +23,7 @@ const { ROLE } = require("../../../config/roles");
  */
 const MSG = {
   usernameExists: "Username is already taken.",
-  emailExists: "Email is already registered.",
+  emailOrPhoneExists: "Email or phone number is already registered.",
   signupSuccess: "You are successfully signed up.",
   signupError: "Unable to create your account.",
   refIdOrUrlSlug: "Ref id or url is already taken.",
@@ -52,10 +52,13 @@ const register = async (userRequest, res, file) => {
       });
     }
     // validate the email
-    let emailNotRegistered = await validateEmail(signupRequest.email);
+    let emailNotRegistered = await validateEmail(
+      signupRequest.email,
+      signupRequest.phone_number
+    );
     if (!emailNotRegistered) {
       return res.status(400).json({
-        message: MSG.emailExists,
+        message: MSG.emailOrPhoneExists,
         success: false,
       });
     }
@@ -111,6 +114,7 @@ const register = async (userRequest, res, file) => {
         group_id: newGroup._id,
         group_ref_id: signupRequest.ref_id,
         role,
+        default_selected: true,
       });
       newUserGroups.save();
     } else if (role == ROLE.user) {
@@ -122,6 +126,7 @@ const register = async (userRequest, res, file) => {
         group_id: group._id,
         group_ref_id: signupRequest.ref_id,
         role,
+        default_selected: true,
       });
       newUserGroups.save();
     }

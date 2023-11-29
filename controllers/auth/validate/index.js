@@ -21,8 +21,11 @@ const validateUsername = async (username) => {
  * @param {string} email - The email of the user.
  * @return {boolean} If the user has an account.
  */
-const validateEmail = async (email) => {
-  let user = await User.findOne({ email });
+const validateEmail = async (email, phone_number) => {
+  let query = {
+    $or: [{ email }, { phone_number }],
+  };
+  let user = await User.findOne(query);
   return user ? false : true;
 };
 

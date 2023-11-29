@@ -18,6 +18,10 @@ const UserGroupsSchema = new Schema(
       lowercase: true,
       enum: [ROLE.user, ROLE.promoter, ROLE.admin, ROLE.superadmin],
     },
+    default_selected: {
+      type: Boolean,
+      default: false,
+    },
     group_ref_id: {
       type: String,
       default: "",

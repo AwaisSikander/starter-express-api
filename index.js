@@ -3,6 +3,7 @@ const exp = require("express");
 const passport = require("passport");
 const { connect } = require("mongoose");
 const { success, error } = require("consola");
+const globalerrorController = require("./controllers/ErrorController");
 
 const { DB, REQUEST_TIMEOUT } = require("./config");
 const PORT = 5000;
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 // User Router Middleware
 app.use("/api", require("./routes"));
+app.use(globalerrorController);
 
 const startApp = async () => {
   try {

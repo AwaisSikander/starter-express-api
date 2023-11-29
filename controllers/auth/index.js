@@ -1,6 +1,7 @@
 const passport = require("passport");
 const register = require("./register");
 const login = require("./login");
+const catchAsync = require("../../utils/CatchAsync");
 
 const userRegister = (userRequest, res, file) =>
   register(userRequest, res, file);
