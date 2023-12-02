@@ -12,6 +12,13 @@ router.use("/auth", require("./auth"));
 // Admin Protected Route
 router.use("/admin", userAuth, checkRole([ROLE.admin]), require("./admin"));
 
+router.use(
+  "/users",
+  userAuth,
+  checkRole([ROLE.admin, ROLE.promoter, ROLE.user, ROLE.superadmin]),
+  require("./auth-users")
+);
+
 // Users Protected Route
 router.get("/profile", userAuth, checkRole([ROLE.user]), async (req, res) => {
   res.status(200).json({ type: ROLE.user, user: serializeUser(req.user) });
