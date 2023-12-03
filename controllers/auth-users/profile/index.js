@@ -2,7 +2,7 @@
 const User = require("../../../models/User");
 const UserGroup = require("../../../models/UserGroup");
 
-const profile = async (userRequest, user, res) => {
+const profile = async (userRequest, user, res, next) => {
   const userMatch = {
     user_id: user._id,
   };

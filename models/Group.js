@@ -33,10 +33,12 @@ const GroupSchema = new Schema(
     description: {
       type: String,
       required: false,
+      default: "",
     },
     about: {
       type: String,
       required: false,
+      default: "",
     },
     payment_status: {
       type: String,

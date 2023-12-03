@@ -57,7 +57,6 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log("HERE");
   err.status = err.status || "FAIL";
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Error Occured";

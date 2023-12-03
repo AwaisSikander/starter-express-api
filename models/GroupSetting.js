@@ -35,14 +35,17 @@ const GroupSettingsSchema = new Schema(
     winner_1_image: {
       type: String,
       required: false,
+      default: null,
     },
     winner_2_image: {
       type: String,
       required: false,
+      default: null,
     },
     winner_3_image: {
       type: String,
       required: false,
+      default: null,
     },
   },
   { timestamps: true }

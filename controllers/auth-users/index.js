@@ -1,4 +1,6 @@
 const profile = require("./profile");
+const updateUser = require("./update-user");
+const updateGroup = require("./update-group");
 const catchAsync = require("../../utils/CatchAsync");
 
 /**
@@ -9,8 +11,20 @@ const catchAsync = require("../../utils/CatchAsync");
  * @param {string} role - The role of the user {admin, user, superadmin}.
  * @return {Object} contains 3 attributes {error/success message : string, success : boolean, reason: string}.
  */
-const userProfile = async (req, res) => catchAsync(profile(req, req.user, res));
+const userProfile = catchAsync(async (req, res, next) =>
+  profile(req, req.user, res, next)
+);
+
+const updateUserById = catchAsync(async (req, res, next) =>
+  updateUser(req, res, next)
+);
+
+const updateUserGroup = catchAsync(async (req, res, next) =>
+  updateGroup(req, res, next)
+);
 
 module.exports = {
   userProfile,
+  updateUserById,
+  updateUserGroup,
 };
