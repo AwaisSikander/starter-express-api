@@ -131,7 +131,7 @@ const register = async (userRequest, res, file) => {
       newUserGroups.save();
     }
     if (file) {
-      const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}${newUser._id}/${file.filename}`;
+      const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}/${file.filename}`;
       newUser.profile_pic = profileImagePath;
       await newUser.save();
     }

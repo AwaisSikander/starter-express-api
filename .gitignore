@@ -83,6 +83,7 @@ web_modules/
 .cache
 .parcel-cache
 /public/uploads/users/images
+/public/uploads/groups/images
 # Next.js build output
 .next
 out

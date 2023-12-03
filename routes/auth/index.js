@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Upload = require("../../utils/Upload");
+const { Upload } = require("../../utils/Upload");
 const { ROLE } = require("../../config/roles");
 // Bring in the User Registration function
 const {

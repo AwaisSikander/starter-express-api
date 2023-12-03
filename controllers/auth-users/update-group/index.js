@@ -3,37 +3,98 @@ const User = require("../../../models/User");
 const Group = require("../../../models/Group");
 const UserGroup = require("../../../models/UserGroup");
 const GroupSetting = require("../../../models/GroupSetting");
-const { USER_PROFILE_IMAGE_PREFIX } = require("../../../config/index");
+const { ROLE } = require("../../../config/roles");
+const { getSubObject, removeEmptyProperties } = require("../../../utils");
+// const {
+//   winner1Upload,
+//   winner2Upload,
+//   winner3Upload,
+// } = require("../../../utils/Upload");
+const { USER_WINNER_IMAGE_PREFIX } = require("../../../config/index");
+// Imports
+const { updateGroupSchema, validateGroupUrlSlug } = require("../validate");
 
 const profile = async (req, res, next) => {
   const { id } = req.user; // Get user ID from JWT
-  const updates = req.body; // User update data
+  // const updates = req.body; // User update data
+  const updates = await updateGroupSchema.validateAsync(req.body);
+
   const { group_id } = req.params;
   const userGroup = await UserGroup.findOne({ user_id: id, group_id });
-  if (!userGroup || ["user"].includes(userGroup.role)) {
+  if (!userGroup || [ROLE.user].includes(userGroup.role)) {
     return res
       .status(404)
       .json({ error: "Group not found or you do not have admin access" });
   }
 
-  const group = await Group.findById(group_id);
-  const groupSetting = await GroupSetting.findOne({ group_id });
+  const groupWithSlug = await validateGroupUrlSlug(updates.url_slug);
+  if (groupWithSlug && updates.url_slug) {
+    return res
+      .status(404)
+      .json({ error: "Group already exsists with your provided url slug" });
+  }
+
   delete updates.ref_id;
   delete updates.role;
 
-  // return res.status(200).json({ groupSetting });
-  // const file = req.file;
-  // if (file) {
-  //   const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}${id}/${file.filename}`;
-  //   updates.profile_pic = profileImagePath;
-  // }
+  const userGroupProperties = removeEmptyProperties(
+    getSubObject(updates, ["title", "url_slug", "description", "about"])
+  );
 
-  const user = await User.findByIdAndUpdate(id, updates);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
+  const group = await Group.findByIdAndUpdate(group_id, userGroupProperties, {
+    new: true,
+  });
+
+  // update GROUP
+
+  let winner_1_image;
+  if (req.files.winner_1_image && req.files.winner_1_image.length) {
+    winner_1_image = req.files.winner_1_image[0].filename;
   }
 
-  return res.status(200).json({ user });
+  let winner_2_image;
+  if (req.files.winner_2_image && req.files.winner_2_image.length) {
+    winner_2_image = req.files.winner_2_image[0].filename;
+  }
+
+  let winner_3_image;
+  if (req.files.winner_3_image && req.files.winner_3_image.length) {
+    winner_3_image = req.files.winner_3_image[0].filename;
+  }
+
+  // const file = req.file;
+  if (winner_1_image) {
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_1_image}`;
+    updates.winner_1_image = imagePath;
+  }
+  if (winner_2_image) {
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_2_image}`;
+    updates.winner_2_image = imagePath;
+  }
+  if (winner_3_image) {
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_3_image}`;
+    updates.winner_3_image = imagePath;
+  }
+
+  const userGroupSettingProperties = removeEmptyProperties(
+    getSubObject(updates, [
+      "days_to_count",
+      "min_user_for_rating",
+      "can_give_rating_to_admin",
+      "min_users",
+      "max_users",
+      "winner_1_image",
+      "winner_2_image",
+      "winner_3_image",
+    ])
+  );
+
+  const groupSetting = await GroupSetting.findOneAndUpdate(
+    { group_id },
+    { $set: { ...userGroupSettingProperties } }
+  );
+
+  return res.status(200).json({ group, groupSetting });
 };
 
 module.exports = profile;

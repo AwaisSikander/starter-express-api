@@ -17,7 +17,7 @@ const profile = async (req, res, next) => {
 
   const file = req.file;
   if (file) {
-    const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}${id}/${file.filename}`;
+    const profileImagePath = `${USER_PROFILE_IMAGE_PREFIX}/${file.filename}`;
     updates.profile_pic = profileImagePath;
   }
 

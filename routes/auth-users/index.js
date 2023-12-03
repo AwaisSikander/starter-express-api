@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Upload = require("../../utils/Upload");
+const { Upload, winnerUpload } = require("../../utils/Upload");
 // const { serializeUser } = require("../../controllers/auth");
 const {
   userProfile,
@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
 router.put("/update", Upload, async (req, res, next) => {
   await updateUserById(req, res, next);
 });
-router.put("/groups/:group_id/update", Upload, async (req, res, next) => {
+router.put("/groups/:group_id/update", winnerUpload, async (req, res, next) => {
   await updateUserGroup(req, res, next);
 });
 
