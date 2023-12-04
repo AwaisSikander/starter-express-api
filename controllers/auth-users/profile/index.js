@@ -36,6 +36,30 @@ const profile = async (userRequest, user, res, next) => {
       },
     },
     {
+      $lookup: {
+        from: "groupsettings",
+        let: {
+          group_id: "$group._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$group_id", "$$group_id"] },
+            },
+          },
+          { $limit: 1 },
+        ],
+        as: "groupsetting",
+      },
+    },
+    {
+      $unwind: "$groupsetting",
+      $unwind: {
+        path: "$groupsetting",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
       $project: {
         _id: "$group._id",
         ref_id: "$group.ref_id",
@@ -43,10 +67,18 @@ const profile = async (userRequest, user, res, next) => {
         url_slug: "$group.url_slug",
         status: "$group.status",
         role: 1,
+        days_to_count: "$groupsetting.days_to_count",
+        min_user_for_rating: "$groupsetting.min_user_for_rating",
+        can_give_rating_to_admin: "$groupsetting.can_give_rating_to_admin",
+        min_users: "$groupsetting.min_users",
+        max_users: "$groupsetting.max_users",
+        winner_1_image: "$groupsetting.winner_1_image",
+        winner_2_image: "$groupsetting.winner_2_image",
+        winner_3_image: "$groupsetting.winner_3_image",
       },
     },
   ]);
-
+  console.log(userGroups);
   if (userGroups.length) {
     userGroups = userGroups[0];
   } else {
