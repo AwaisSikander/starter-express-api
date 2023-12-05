@@ -19,7 +19,7 @@ const RatingSchema = new Schema(
       required: true,
     },
     score: {
-      type: Int32Array,
+      type: String,
       required: true,
     },
     description: {

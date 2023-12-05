@@ -1,6 +1,5 @@
 const profile = require("./group-users");
-const updateUser = require("./update-user");
-const updateGroup = require("./update-group");
+const createRating = require("./create-ratings");
 const catchAsync = require("../../utils/CatchAsync");
 
 /**
@@ -14,17 +13,11 @@ const catchAsync = require("../../utils/CatchAsync");
 const groupUsers = catchAsync(async (req, res, next) =>
   profile(req, req.user, res, next)
 );
-
-const updateUserById = catchAsync(async (req, res, next) =>
-  updateUser(req, res, next)
-);
-
-const updateUserGroup = catchAsync(async (req, res, next) =>
-  updateGroup(req, res, next)
+const createRatingsForUsers = catchAsync(async (req, res, next) =>
+  createRating(req, req.user, res, next)
 );
 
 module.exports = {
   groupUsers,
-  updateUserById,
-  updateUserGroup,
+  createRatingsForUsers,
 };
