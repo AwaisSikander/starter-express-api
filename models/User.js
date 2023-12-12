@@ -44,12 +44,14 @@ const UserSchema = new Schema(
       lowercase: true,
     },
     group_ref_ids: [
+      /* GROUP ref_ids in which user is already exsists */
       {
         type: String,
         required: false,
       },
     ],
     group_id: {
+      // User is admin of this group
       type: Types.ObjectId,
       ref: "groups",
       required: false,

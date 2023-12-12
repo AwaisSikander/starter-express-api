@@ -18,12 +18,15 @@ router.use(
   checkRole([ROLE.admin, ROLE.promoter, ROLE.user, ROLE.superadmin]),
   require("./auth-users")
 );
+
 router.use(
   "/groups",
   userAuth,
   checkRole([ROLE.admin, ROLE.promoter, ROLE.user, ROLE.superadmin]),
   require("./auth-groups")
 );
+
+router.use("/groups", require("./auth-groups/un-authenticated"));
 
 // Users Protected Route
 router.get("/profile", userAuth, checkRole([ROLE.user]), async (req, res) => {

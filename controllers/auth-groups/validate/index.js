@@ -20,6 +20,21 @@ const validateGroupUrlSlug = async (url_slug) => {
   return group ? true : false;
 };
 
+const getGroupRefIdAndUrlSlug = async (ref_id, url_slug) => {
+  let query = {
+    $or: [{ ref_id }, { url_slug }],
+  };
+
+  if (!ref_id) {
+    query = { url_slug };
+  } else if (!url_slug) {
+    query = { ref_id };
+  }
+
+  let group = await Group.findOne(query);
+  return group;
+};
+
 /**
  * Sets a validation schema for signup request body.
  * @const updateGroupSchema
@@ -39,4 +54,5 @@ const updateGroupSchema = Joi.object({
 module.exports = {
   updateGroupSchema,
   validateGroupUrlSlug,
+  getGroupRefIdAndUrlSlug,
 };
