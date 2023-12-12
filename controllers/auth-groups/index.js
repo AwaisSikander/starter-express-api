@@ -4,7 +4,7 @@ const catchAsync = require("../../utils/CatchAsync");
 const allRatingsOfGroup = require("./get-rating-events/all");
 const getRatingById = require("./get-rating-events/index");
 const getRatingByDate = require("./get-rating-events/by-date");
-const getRatingByUrlSlugAndRef = require("./get-rating-events/bg-url-or-ref");
+const getRatingByUrlSlugAndRef = require("./get-rating-events/by-url-or-ref");
 /**
  * profile of a user.
  * @async
