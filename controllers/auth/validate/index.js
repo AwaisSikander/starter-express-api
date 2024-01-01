@@ -65,8 +65,11 @@ const signupSchema = Joi.object({
   role: Joi.string().min(3).optional(),
   email: Joi.string().email().required(),
   password: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+    .pattern(new RegExp("^.{8,30}$"))
     .min(8)
+    .messages({
+      "string.pattern.base": `Password must be between 8 to 30 character`,
+    })
     .required(),
 
   ref_id: Joi.string()
@@ -95,8 +98,11 @@ const signupSchema = Joi.object({
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+    .pattern(new RegExp("^.{8,30}$"))
     .min(8)
+    .messages({
+      "string.pattern.base": `Password must be between 8 to 30 character`,
+    })
     .required(),
 });
 
