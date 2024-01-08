@@ -65,15 +65,15 @@ const profile = async (req, res, next) => {
 
   // const file = req.file;
   if (winner_1_image) {
-    const imagePath = `${USER_WINNER_IMAGE_PREFIX}${winner_1_image}`;
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_1_image}`;
     updates.winner_1_image = imagePath;
   }
   if (winner_2_image) {
-    const imagePath = `${USER_WINNER_IMAGE_PREFIX}${winner_2_image}`;
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_2_image}`;
     updates.winner_2_image = imagePath;
   }
   if (winner_3_image) {
-    const imagePath = `${USER_WINNER_IMAGE_PREFIX}${winner_3_image}`;
+    const imagePath = `${USER_WINNER_IMAGE_PREFIX}/${winner_3_image}`;
     updates.winner_3_image = imagePath;
   }
 
