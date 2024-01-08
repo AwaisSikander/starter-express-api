@@ -17,7 +17,7 @@ const validateGroupUrlSlug = async (url_slug) => {
     query = { url_slug };
   }
   let group = await Group.findOne(query);
-  return group ? true : false;
+  return group ? group : false;
 };
 
 /**

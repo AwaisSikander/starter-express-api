@@ -17,7 +17,8 @@ const { updateGroupSchema, validateGroupUrlSlug } = require("../validate");
 const profile = async (req, res, next) => {
   const { id } = req.user; // Get user ID from JWT
   // const updates = req.body; // User update data
-  const updates = await updateGroupSchema.validateAsync(req.body);
+  const body = removeEmptyProperties(req.body);
+  const updates = await updateGroupSchema.validateAsync(body);
 
   const { group_id } = req.params;
   const userGroup = await UserGroup.findOne({ user_id: id, group_id });
@@ -28,7 +29,7 @@ const profile = async (req, res, next) => {
   }
 
   const groupWithSlug = await validateGroupUrlSlug(updates.url_slug);
-  if (groupWithSlug && updates.url_slug) {
+  if (groupWithSlug && updates.url_slug && groupWithSlug._id != group_id) {
     return res
       .status(404)
       .json({ error: "Group already exsists with your provided url slug" });

@@ -78,7 +78,6 @@ const profile = async (userRequest, user, res, next) => {
       },
     },
   ]);
-  console.log(userGroups);
   if (userGroups.length) {
     userGroups = userGroups[0];
   } else {
