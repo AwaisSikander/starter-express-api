@@ -9,7 +9,7 @@ const {
   getGroupEventByDate,
 } = require("../../controllers/auth-groups");
 
-router.get("/:group_id/users", async (req, res, next) => {
+router.get("/:group_id/user-today-rating", async (req, res, next) => {
   // return res.status(200).json({ type: "GROUPS" });
   await groupUsers(req, res, next);
 });
