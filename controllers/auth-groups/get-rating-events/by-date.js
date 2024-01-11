@@ -55,6 +55,7 @@ const singleRating = async (req, user, res, next) => {
         last_name: { $first: "$last_name" }, // Include username
         email: { $first: "$email" }, // Include user email
         phone_number: { $first: "$phone_number" }, // Include user email
+        profile_pic: { $first: "$profile_pic" }, // Include user email
         eventScores: {
           $push: {
             eventId: "$ratings.event._id",
