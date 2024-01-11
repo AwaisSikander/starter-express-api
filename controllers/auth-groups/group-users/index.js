@@ -55,7 +55,7 @@ const profile = async (req, user, res, next) => {
         title: 1,
         description: 1,
         users: {
-          _id: 1,
+          _id: "$ratedUsers._id",
           first_name: "$ratedUsers.first_name",
           last_name: "$ratedUsers.last_name",
           email: "$ratedUsers.email",
