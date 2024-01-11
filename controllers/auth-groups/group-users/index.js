@@ -91,13 +91,13 @@ const profile = async (req, user, res, next) => {
   if (!groupSetting || !groupSetting.can_give_rating_to_admin) {
     query = {
       group_id: group_id,
-      user_id: { $ne: userId },
+      // user_id: { $ne: userId },
       role: { $nin: ["admin", "promoter"] },
     };
   } else {
     query = {
       group_id: group_id,
-      user_id: { $ne: userId },
+      // user_id: { $ne: userId },
     };
   }
   // Find users in the group, excluding the logged-in user
