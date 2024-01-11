@@ -68,16 +68,27 @@ const singleRating = async (req, user, res, next) => {
       $sort: { _id: 1 }, // Sort by user ID
     },
   ]);
-  const event_count = await Event.countDocuments({
+  const events = await Event.find({
     createdAt: {
       $gte: startDate,
       $lte: endDate,
     },
     group_id,
+  }).populate({
+    path: "created_by",
+    select: {
+      _id: 1,
+      first_name: 1,
+      last_name: 1,
+      email: 1,
+      phone_number: 1,
+      profile_pic: 1,
+      // group_ref_ids: 1,
+    },
   });
 
   // const day = date.subtract("1", "w");
-  return res.status(200).json({ users /* day, range */, event_count });
+  return res.status(200).json({ users /* day, range */, events });
 };
 
 module.exports = singleRating;
